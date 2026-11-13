@@ -262,6 +262,15 @@ td.best { background: var(--bar); }
 .md th { text-align: left; }
 summary { cursor: pointer; color: var(--ink-2); margin-top: var(--sp3); }
 
+/* Compact bar: the menu as a burger list. Below 1180px always; wider, when a
+   region's pages do not fit in one row (app.js fitMenu sets .compact). */
+.bar.compact .bar-in { flex-wrap: wrap; gap: 0 var(--sp4); }
+.bar.compact .burger { display: block; }
+.bar.compact .bar-body { display: none; flex-basis: 100%; flex-direction: column; padding: 0 0 var(--sp3); }
+.bar.compact.open .bar-body { display: flex; }
+.bar.compact #menu { flex-direction: column; gap: 0; }
+.bar.compact #menu a { min-height: 44px; margin: 0; padding-left: var(--sp3); border-bottom: 0; border-left: 2px solid transparent; }
+.bar.compact .bar-right { justify-content: space-between; padding-top: var(--sp2); }
 @media (max-width: 1180px) {
   .bar-in { flex-wrap: wrap; gap: 0 var(--sp4); padding: 0 var(--sp4); }
   .burger { display: block; }

@@ -611,6 +611,23 @@ window.Macro = (function () {
     state.region.pages.forEach(function (p) {
       menu.appendChild(h("a", { href: "#/" + state.region.id + "/" + p.id, class: p === state.page ? "on" : "", "aria-current": p === state.page ? "page" : null }, p.title));
     });
+    fitMenu();
+  }
+  // fitMenu turns the bar into a burger when the region's pages do not fit
+  // in one row next to the region and theme controls (wide screens; below
+  // 1180px the bar is always compact).
+  function fitMenu() {
+    var bar = document.getElementById("rail");
+    var menu = document.getElementById("menu");
+    if (window.matchMedia("(max-width: 1180px)").matches) {
+      bar.classList.remove("compact");
+      return;
+    }
+    var wasCompact = bar.classList.contains("compact");
+    bar.classList.remove("compact");
+    var fits = menu.scrollWidth <= menu.clientWidth + 1;
+    bar.classList.toggle("compact", !fits);
+    if (wasCompact && fits) setMenuOpen(false);
   }
   function setMenuOpen(open) {
     document.getElementById("rail").classList.toggle("open", open);
@@ -676,6 +693,11 @@ window.Macro = (function () {
     });
     var burger = document.getElementById("burger");
     burger.addEventListener("click", function () { setMenuOpen(burger.getAttribute("aria-expanded") !== "true"); });
+    var fitting = 0;
+    window.addEventListener("resize", function () {
+      if (fitting || !state.region) return;
+      fitting = requestAnimationFrame(function () { fitting = 0; fitMenu(); });
+    });
     Promise.all([load(["meta"]), fontsReady()]).then(function (ready) {
       var meta = ready[0];
       state.meta = meta;
